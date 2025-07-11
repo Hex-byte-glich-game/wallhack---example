@@ -1,0 +1,1191 @@
+//Hacked Created by Vitrix Maggot//
+//Thanks to Alex//
+
+#include <windows.h>
+#include <mmsystem.h>
+#include <stdio.h>
+#include <fstream>
+#include <cSuport.h>
+#include "cReplace.h"
+#include <cFullhack.h>
+#include <d3d9.h>
+#include <d3dx9.h>
+#include <time.h>
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "d3dx9.lib")
+#pragma warning (disable:4996 4244)
+//----------------------------------------------------------------------------------------------------------------------------------
+#define HOOK(func,addy) o##func = (t##func)CreateDetour((DWORD)hk##func,(DWORD)addy,Detour_Type_0xB8,7)//Quick Hook using CreateDetour UC-FORUM
+#define UNHOOK(func,addy) o##func = (t##func)CreateDetour((DWORD)o##func,(DWORD)addy,Detour_Type_0xB8,7)//Quick Unook using CreateDetour UC-FORUM
+LPDIRECT3DTEXTURE9 Megaze, Blooderz, Nightmarez, Avenged, Sevenfold, TujuhX, Bondan, Fadetoblack;
+#define ES 0 //EndScene
+#define DIP 1 //DrawIndexedPrimitive
+#define RES 2 //Reset
+#define E8 2 //Reset
+#define ZE 3 //Reset
+#define DrawIndex 0x002B
+#define EndS 0x0023
+//----------------------------------------------------------------------------------------------------------------------------------
+BYTE _Menu[] = { 0x89, 0x50, 0x4E, 0x47, 0xD, 0xA, 0x1A, 0xA, 0x0, 0x0, 0x0, 0xD, 0x49, 0x48, 0x44, 0x52, 0x0, 0x0, 0x0, 0xA2, 0x0, 0x0, 0x0, 0x33, 0x8, 0x6, 0x0, 0x0, 0x0, 0x14, 0xC8, 0xD3, 0xFD, 0x0, 0x0, 0x0, 0x4, 0x67, 0x41, 0x4D, 0x41, 0x0, 0x0, 0xB1, 0x8F, 0xB, 0xFC, 0x61, 0x5, 0x0, 0x0, 0x0, 0x6, 0x62, 0x4B, 0x47, 0x44, 0x0, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0xA0, 0xBD, 0xA7, 0x93, 0x0, 0x0, 0x0, 0x9, 0x70, 0x48, 0x59, 0x73, 0x0, 0x0, 0xB, 0x13, 0x0, 0x0, 0xB, 0x13, 0x1, 0x0, 0x9A, 0x9C, 0x18, 0x0, 0x0, 0x0, 0x7, 0x74, 0x49, 0x4D, 0x45, 0x7, 0xDC, 0x3, 0x2, 0xB, 0x26, 0x18, 0x98, 0x66, 0x30, 0x3C, 0x0, 0x0, 0x20, 0x0, 0x49, 0x44, 0x41, 0x54, 0x78, 0xDA, 0xED, 0x7D, 0x77, 0x94, 0x5C, 0xD7, 0x79, 0xDF, 0xEF, 0xDE, 0xD7, 0xE6, 0x4D, 0xDD, 0xA9, 0x3B, 0xDB, 0xB, 0x16, 0xBD, 0x10, 0x24, 0x1, 0xA, 0x24, 0x44, 0x52, 0x2C, 0xA2, 0x28, 0x4A, 0x14, 0x49, 0x49, 0x94, 0x25, 0xCB, 0xB6, 0x64, 0xC7, 0xB1, 0x12, 0xCB, 0x76, 0xDA, 0xC9, 0x49, 0x72, 0x4E, 0x1C, 0xB7, 0x28, 0x47, 0x91, 0x63, 0xC7, 0x39, 0x2E, 0xD1, 0xB1, 0x23, 0x59, 0x51, 0x73, 0x62, 0x35, 0xCB, 0xA4, 0x2D, 0x91, 0x14, 0x45, 0x52, 0xA4, 0xA, 0x41, 0x12, 0x80, 0x0, 0x12, 0x1D, 0x8B, 0xC5, 0xF6, 0xBE, 0x3B, 0xE5, 0xB5, 0xFB, 0xDE, 0xBB, 0x37, 0x7F, 0xCC, 0x9B, 0xC1, 0x60, 0x38, 0x33, 0x3B, 0x4B, 0x90, 0x94, 0xAD, 0x93, 0xC1, 0x99, 0xB3, 0x8B, 0xDD, 0x79, 0xEF, 0x7D, 0xE5, 0xF7, 0xD5, 0x7B, 0xEF, 0xB7, 0x4, 0x6F, 0xFC, 0x8B, 0x74, 0xF0, 0x19, 0xD1, 0xE6, 0x1A, 0x81, 0xFF, 0xFF, 0xFA, 0xA9, 0x7F, 0x91, 0x7F, 0x24, 0xF7, 0xDC, 0x8, 0xB8, 0x3F, 0x4D, 0xF2, 0xFB, 0x87, 0xC2, 0x27, 0x79, 0x33, 0x69, 0x24, 0x6F, 0x2, 0xF1, 0xE4, 0xD, 0x14, 0xBC, 0xF8, 0x29, 0x5, 0xE0, 0x4F, 0x92, 0x4F, 0xF2, 0x93, 0xA0, 0x91, 0xBC, 0x1, 0xC4, 0x77, 0xF2, 0xFD, 0x66, 0x9, 0x17, 0x9B, 0xFC, 0xFF, 0x9B, 0xA5, 0x24, 0xB2, 0x9, 0x59, 0x8A, 0xE, 0x3E, 0xD7, 0x8E, 0x2F, 0xF1, 0x13, 0xE4, 0xED, 0x5A, 0x74, 0xF3, 0xA6, 0x0, 0xB1, 0x99, 0x22, 0x36, 0xFA, 0xBA, 0x11, 0xC1, 0xA2, 0x3, 0xA6, 0xC5, 0x4F, 0x58, 0x51, 0x1B, 0xF1, 0xF6, 0x7A, 0x78, 0x3F, 0xF1, 0x26, 0x2, 0x92, 0x74, 0xC8, 0x67, 0x3B, 0x7A, 0xAE, 0x89, 0x46, 0xF9, 0x75, 0x24, 0x9E, 0x34, 0x7C, 0xDF, 0xF8, 0xDE, 0x8, 0x74, 0x9D, 0x2, 0x50, 0x4, 0xF7, 0x7B, 0xB3, 0xC3, 0x72, 0x33, 0xF0, 0x35, 0xFB, 0x7E, 0xB3, 0xC5, 0x58, 0x3B, 0x3E, 0xDF, 0x2C, 0x6F, 0x4F, 0x3A, 0xE0, 0xB1, 0x53, 0x9D, 0x88, 0xD7, 0x52, 0x6C, 0xCA, 0xAF, 0x23, 0x8, 0xAB, 0x6F, 0xDA, 0xF0, 0xB5, 0x15, 0x18, 0x9B, 0x9, 0xBD, 0x13, 0xC5, 0xF0, 0x26, 0x8C, 0xBF, 0x91, 0xF9, 0x55, 0x2B, 0xE5, 0x74, 0x62, 0x70, 0xA2, 0x3, 0x20, 0x92, 0x26, 0x7C, 0x8A, 0x6, 0xDE, 0x3A;
+//------------------------------------------------------------------------------------------------------------------
+LPD3DXFONT g_pFont = NULL;
+LPD3DXFONT g_pFont2 = NULL;
+D3DVIEWPORT9 g_ViewPort;
+//------------------------------------------------------------------------------------------------------------------
+LPDIRECT3DDEVICE9 npDevice;
+LPDIRECT3DTEXTURE9 txHeader;
+LPD3DXSPRITE bbSprite;
+D3DXVECTOR3 pHeader;
+//------------------------------------------------------------------------------------------------------------------
+bool CekHook=false;
+bool pertamax=true;
+int Comander = 0;
+int Rezpect = 0;
+int Comander1 = 0;
+int Rezpect1 = 0;
+int tandasilang = 0;
+int Tutor = 0;
+int wew = 1;
+int d3d = 1;
+int uyeh = 0;
+int player = 1;
+int fullhack = 0;
+int replace = 0;
+int baret = 0;
+int Charakter = 0;
+int rm = 0;
+int DC = 0;
+int info = 0;
+int group = 0;
+int Replaceeeeeeeeeeeeeeeee=0;
+int mp3 = 0;
+int memek=0;
+int kontolllllllll=0;
+int Hack1 = 0;
+int Hack2 = 0;
+int Hack3 = 0;
+int Hack4 = 0;
+int Hack5 = 0;
+int Hack6 = 0;
+int Hack7 = 0;
+int Hack8 = 0;
+int Hack9 = 0;
+int Hack10 = 0;
+int Hack11 = 0;
+int Hack12 = 0;
+int Hack13 = 0;
+int Hack14 = 0;
+int CH_PATEN = 0;
+int Minfo = 0;
+int azzzzz=0;
+int Kontoless=0;
+int nenennnnnnn=0;
+//----------------------------------------------------------------------------------------------------------------------------------
+#define SMOKE ( Stride == 24 && NumVertices == 256 ||(Stride == 24 && NumVertices == 192))
+#define Dino ((primCount == 57) || (primCount == 161) || (primCount == 186) || (primCount == 197) || (primCount == 349) || (primCount == 495) || (primCount == 955) || (NumVertices == 2517 && primCount == 57) || (NumVertices == 3721 && primCount == 275) || (NumVertices == 0 && primCount == 52) || (NumVertices == 0 && primCount == 105) || (NumVertices ==0 && primCount == 186) || (NumVertices == 0 && primCount == 197) || (primCount == 579) || (primCount == 488))
+#define K400 ((NumVertices == 1002 && primCount == 980))
+#define C5 ((NumVertices == 772 && primCount == 849))
+#define CT ( NumVertices == 490 || NumVertices == 221 || NumVertices == 611|| NumVertices == 102 ||(primCount == 526) || (primCount == 84) || (primCount == 64) || NumVertices == 67 || NumVertices == 92 || NumVertices == 95 || NumVertices == 114 || NumVertices == 504 || NumVertices == 108 || NumVertices == 398 || NumVertices == 520 || NumVertices == 684 || (primCount == 56) || (primCount == 93) )
+#define Badan ((primCount == 16 || primCount == 28 || primCount == 50 || primCount == 52 || primCount == 76 || primCount == 130))
+#define Tero ((NumVertices == 88 && primCount == 130) || (NumVertices == 142 && primCount == 266)|| (NumVertices == 472 && primCount == 304) || (NumVertices == 384 && primCount == 346) || (NumVertices == 348 && primCount == 520) || (NumVertices == 596 && primCount == 590)|| (NumVertices == 628 && primCount == 748) || (NumVertices == 3487 && primCount == 1737)|| (NumVertices == 3487 && primCount == 1766) || (NumVertices == 262 && primCount == 196) || (NumVertices == 142 && primCount == 266) || (NumVertices == 244 && primCount == 406) || (NumVertices == 1846 && primCount == 414) || (NumVertices == 528 && primCount == 540) || (NumVertices == 520 && primCount == 593) || (NumVertices == 2728 && primCount == 1344) || (NumVertices == 1091 && primCount == 1390) || (NumVertices == 1095 && primCount == 1460) || (NumVertices == 1846 && primCount == 2090) || (NumVertices == 2263 && primCount == 45) || (NumVertices == 370 && primCount == 278) || (NumVertices == 482 && primCount == 390) || (NumVertices == 734 && primCount == 688) || (NumVertices == 2263 && primCount == 1023) || (NumVertices == 812 && primCount == 1246) || (NumVertices == 2263 && primCount == 1434) || (NumVertices == 2041 && primCount == 1561) || (NumVertices == 1530 && primCount == 1534) || (NumVertices == 749 && primCount == 1374) || (NumVertices == 1831 && primCount == 1267) || (NumVertices == 2010 && primCount == 426) || (NumVertices == 287 && primCount == 396) || (NumVertices == 1831 && primCount == 341) || (NumVertices == 1831 && primCount == 278) || (NumVertices == 185 && primCount == 254) || (NumVertices == 74 && primCount == 66) || (NumVertices == 56 && primCount == 40) || (NumVertices == 185 && primCount == 271) || (NumVertices == 45 && primCount == 56) || (NumVertices == 92 && primCount == 56) || (NumVertices == 611 && primCount == 114) || (NumVertices == 611 && primCount == 526) || (NumVertices == 18 && primCount == 12) || (NumVertices == 96 && primCount == 92) || (NumVertices == 99 && primCount == 61) || (NumVertices == 133 && primCount == 205)|| (NumVertices == 245 && primCount == 276) || (NumVertices == 398 && primCount == 487) || (NumVertices == 26 && primCount == 20) || (NumVertices == 1204 && primCount == 241) || (NumVertices == 80 && primCount == 52) || (NumVertices == 1204 && primCount == 124) || (NumVertices == 113 && primCount == 139) || (NumVertices == 1204 && primCount == 56) || (NumVertices == 684 && primCount == 740) || (NumVertices == 1204 && primCount == 42) || (NumVertices == 45 && primCount == 56) || (NumVertices == 1204 && primCount == 35) || (NumVertices == 334 && primCount == 360) || (NumVertices == 175 && primCount == 246) || (NumVertices == 195 && primCount == 109) || (NumVertices == 71 && primCount == 120) || (NumVertices == 88 && primCount == 130) || (NumVertices == 201 && primCount == 157) || (NumVertices == 224 && primCount == 200) || (NumVertices == 296 && primCount == 166) || (NumVertices == 1353 && primCount == 386) || (NumVertices == 18 && primCount == 20) || (NumVertices == 41 && primCount == 30) || (NumVertices == 62 && primCount == 67) || (NumVertices == 152 && primCount == 168) || (NumVertices == 202 && primCount == 174) || (NumVertices == 237 && primCount == 395) || (NumVertices == 647 && primCount == 716) || (NumVertices == 727 && primCount == 936) || (NumVertices == 90 && primCount == 136) || (NumVertices == 120 && primCount == 170) || (NumVertices == 142 && primCount == 128) || (NumVertices == 218 && primCount == 322) || (NumVertices == 285 && primCount == 94) || (NumVertices == 1316 && primCount == 1574) || (NumVertices == 1316 && primCount == 134) || (NumVertices == 56 && primCount == 158) || (NumVertices == 73 && primCount == 112) || (NumVertices == 143 && primCount == 94) || (NumVertices == 246 && primCount == 120) || (NumVertices == 353 && primCount == 464) || (NumVertices == 381 && primCount == 234) || (NumVertices == 547 && primCount == 700) || (NumVertices == 1353 && primCount == 1404))
+//----------------------------------------------------------------------------------------------------------------------------------
+char *pProcessWindowTitle = "Point Blank";
+char *pProcessWindowClass = "I3VIEWER";
+//----------------------------------------------------------------------------------------------------------------------------------
+#define PI 3.14159265
+ID3DXLine *g_pLine;
+//----------------------------------------------------------------------------------------------------------------------------------
+D3DRECT RectA;
+D3DRECT RectB;
+D3DVIEWPORT9
+Viewport;
+//----------------------------------------------------------------------------------------------------------------------------------
+D3DCOLOR
+HairColor = D3DCOLOR_ARGB(255, 255, 000, 000);
+//----------------------------------------------------------------------------------------------------------------------------------
+DWORD dwProcessID;
+HANDLE hProcess;
+//----------------------------------------------------------------------------------------------------------------------------------
+using namespace std;
+ofstream infile;
+ofstream myfile;
+//----------------------------------------------------------------------------------------------------------------------------------
+#define MENUMAXITEMS 100
+#define MENUFOLDER 1
+#define ANJING 1
+#define MENUTEXT 2
+#define MENUITEM 3
+#define MENUWEWITEM 10
+#define MENUINFO 0
+//----------------------------------------------------------------------------------------------------------------------------------
+int Mpos=0; // current highlighted menuitem
+int Mmax=0; // number of menu items
+int Mxofs =160; // offset for option text
+int Mysize=15; // heigh of a menuline
+int Mvisible=1;
+//----------------------------------------------------------------------------------------------------------------------------------
+extern int Mpos;
+extern int Mmax;
+extern int Mxofs;
+extern int Mysize;
+extern int Mvisible;
+extern char Mtitle[];
+extern char *Moptfolder[];
+extern char *Moptonoff[];
+extern char *optColor1[11];
+extern char *optColor2[11];
+extern char *Secondary[4];
+//----------------------------------------------------------------------------------------------------------------------------------
+void MenuAddItem(char *txt, char **opt, int *var, int maxvalue, int typ);
+void MenuAddText (char *txt, char *opt="");
+void MenuShow(int x, int y, ID3DXFont* g_pFont);
+void MenuNav(void);
+//----------------------------------------------------------------------------------------------------------------------------------
+#define MCOLOR_TITLE D3DCOLOR_ARGB(255, 000, 255, 000)
+#define MCOLOR_CURRENT D3DCOLOR_ARGB(255, 000, 255, 000)
+#define MCOLOR_TEXT D3DCOLOR_ARGB(255, 000, 255, 000)
+#define MCOLOR_ACTIVE D3DCOLOR_ARGB(255, 000, 255, 000)
+#define MENUCOLOR_TITLE D3DCOLOR_ARGB(255, 255, 240, 0)
+#define MCOLOR_FOLDER D3DCOLOR_ARGB(255, 000, 255, 000)
+#define MCOLOR_INACTIVE D3DCOLOR_ARGB(255, 173, 173, 173)
+//----------------------------------------------------------------------------------------------------------------------------------
+bool Generate = true;
+//WARNA-WARNA
+#define MAROON D3DCOLOR_ARGB(255, 142, 30, 0)
+#define LGRAY D3DCOLOR_ARGB(255, 174, 174, 174)
+#define WHITE D3DCOLOR_ARGB(255, 255, 255, 255)
+#define RED D3DCOLOR_ARGB(255, 255, 000, 000)
+#define GREEN D3DCOLOR_ARGB(255, 000, 255, 000)
+#define BLUE D3DCOLOR_ARGB(255, 000, 000, 255)
+#define BLACK D3DCOLOR_ARGB(150, 000, 000, 000)
+#define mBLACK D3DCOLOR_ARGB(100, 000, 000, 205)
+#define PURPLE D3DCOLOR_ARGB(255, 125, 000, 255)
+#define GREY D3DCOLOR_ARGB(255, 128, 128, 128)
+#define YELLOW D3DCOLOR_ARGB(255, 255, 255, 000)
+#define ORANGE D3DCOLOR_ARGB(255, 255, 125, 000)
+#define PINK D3DCOLOR_ARGB(255, 255, 050, 250)
+#define CYAN D3DCOLOR_ARGB(255, 000, 255, 255)
+#define WHITE2 D3DCOLOR_ARGB(100, 255, 255, 255)
+#define RED2 D3DCOLOR_ARGB(100, 255, 000, 000)
+#define GREEN2 D3DCOLOR_ARGB(100, 000, 255, 000)
+#define BLUE2 D3DCOLOR_ARGB(100, 000, 000, 255)
+#define BLACK2 D3DCOLOR_ARGB(100, 000, 000, 000)
+#define PURPLE2 D3DCOLOR_ARGB(100, 125, 000, 255)
+#define GREY2 D3DCOLOR_ARGB(100, 128, 128, 128)
+#define YELLOW2 D3DCOLOR_ARGB(100, 255, 255, 000)
+#define ORANGE2 D3DCOLOR_ARGB(100, 255, 125, 000)
+#define PINK2 D3DCOLOR_ARGB(100, 255, 050, 250)
+#define CYAN2 D3DCOLOR_ARGB(100, 000, 255, 255)
+#define Biru D3DCOLOR_ARGB( 250, 25, 220, 251)
+#define Biru D3DCOLOR_ARGB( 250, 25, 220, 251)
+LPDIRECT3DTEXTURE9 White,Red,Green,Blue,Black,Purple,Grey,Yellow,Orange,Pink,Cyan;
+//----------------------------------------------------------------------------------------------------------------------------------
+LPDIRECT3DVERTEXBUFFER9 Stream_Data;
+UINT Offset = 0;
+UINT Stride = 0;
+UINT texnum = 0;
+//----------------------------------------------------------------------------------------------------------------------------------
+RECT rect;
+RECT rect2;
+RECT rect3;
+//----------------------------------------------------------------------------------------------------------------------------------
+struct{
+int *var;
+int maxvalue;
+int typ;
+char *txt;
+char **opt;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+MENU[MENUMAXITEMS];
+//----------------------------------------------------------------------------------------------------------------------------------
+void MenuAddItem(char *txt, char **opt, int *var, int maxvalue, int typ){
+MENU[Mmax].typ=typ;
+MENU[Mmax].txt=txt;
+MENU[Mmax].opt=opt;
+MENU[Mmax].var=var;
+MENU[Mmax].maxvalue=maxvalue;
+Mmax++;
+}
+
+void MenuAddText(char *txt, char *opt){
+MENU[Mmax].typ=MENUTEXT;
+MENU[Mmax].txt=txt;
+MENU[Mmax].opt=(char **)opt;
+MENU[Mmax].var=0;
+MENU[Mmax].maxvalue=0;
+Mmax++;
+}
+VOID __stdcall CMenuItem_DrawCronersBox(INT xx,INT yy,INT hh,INT ww,LPDIRECT3DDEVICE9 pDevice)
+{
+D3DRECT rec;
+FLOAT x,y,w,h;
+
+struct vertex
+{
+FLOAT x,y,z,t;
+DWORD Color;
+};
+
+vertex V[8];
+
+x = (float)xx; y = (float)yy; h = (float)hh; w = (float)ww;
+
+V[0].Color = V[1].Color = V[2].Color = V[3].Color = D3DCOLOR_ARGB( 000, 00, 00, 00 );
+V[4].Color = V[5].Color = V[6].Color = V[7].Color = D3DCOLOR_ARGB( 000, 00, 00, 00 );
+
+V[0].z = V[1].z = V[2].z = V[3].z = 0;
+V[4].z = V[5].z = V[6].z = V[7].z = 0;
+V[0].t = V[1].t = V[2].t = V[3].t = 0;
+V[4].t = V[5].t = V[6].t = V[7].t = 0;
+
+V[0].x = V[1].x = x;
+V[0].y = V[2].y = y + h;
+V[1].y = V[3].y = y;
+V[2].x = V[3].x = x + w;
+V[4].x = V[5].x = x;
+V[4].y = V[6].y = y + h;
+V[5].y = V[7].y = y;
+V[6].x = V[7].x = x + w;
+
+pDevice->SetTexture(0, NULL);
+pDevice->SetPixelShader( NULL );
+pDevice->SetRenderState(D3DRS_CLIPPING,FALSE);
+pDevice->SetFVF(D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1);
+pDevice->DrawPrimitiveUP( D3DPT_TRIANGLESTRIP,2,V,sizeof(vertex));
+
+rec.x1 = xx;rec.y1 = yy;rec.x2 = xx+ww;rec.y2 = yy+1;
+//pDevice->Clear(1,&rec,D3DCLEAR_TARGET,D3DCOLOR_ARGB(255, 255, 255, 000),0,0);
+rec.x1 = xx;rec.y1 = hh+yy;rec.x2 = xx+ww;rec.y2 = hh+yy+1;
+//pDevice->Clear(1,&rec,D3DCLEAR_TARGET,D3DCOLOR_ARGB(255, 255, 255, 000),0,0);
+rec.x1 = xx;rec.y1 = yy;rec.x2 = xx+1;rec.y2 = yy+hh;
+//pDevice->Clear(1,&rec,D3DCLEAR_TARGET,D3DCOLOR_ARGB(255, 255, 255, 000),0,0);
+rec.x1 = xx+ww;rec.y1 = yy;rec.x2 = xx+ww+1;rec.y2 = yy+hh;
+//pDevice->Clear(1,&rec,D3DCLEAR_TARGET,D3DCOLOR_ARGB(255, 255, 255, 000),0,0);
+
+return;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void MenuShow(int x, int y, ID3DXFont *pFont){
+int i, val;
+DWORD color;
+SetRect( &rect, x+Mxofs/3, y, x+Mxofs /2 , y );
+if (!Mvisible) return;
+
+if (Mtitle[0]) {
+
+pFont->DrawText(NULL,Mtitle,-1,&rect,DT_NOCLIP | DT_TOP, MCOLOR_CURRENT);
+
+y+=Mysize;
+}
+
+for (i=0; i<Mmax; i++) {
+
+val=(MENU[i].var)?(*MENU[i].var):0;
+
+if (i==Mpos){
+color=BLUE;
+CMenuItem_DrawCronersBox((INT)x - 0,(INT)y - 1,15,198, npDevice);
+}
+else if (MENU[i].typ==MENUFOLDER)
+color=MCOLOR_FOLDER;
+else if (MENU[i].typ==ANJING)
+color=MCOLOR_INACTIVE;
+else if (MENU[i].typ==MENUTEXT)
+color=MCOLOR_TEXT;
+else
+color=(val)?YELLOW:WHITE;
+SetRect( &rect3, x, y, x , y );
+SetRect( &rect2, x+Mxofs, y, x+Mxofs , y );
+pFont->DrawText(NULL,MENU[i].txt,-1,&rect3, DT_NOCLIP,color);
+if (MENU[i].opt) {
+if (MENU[i].typ==MENUTEXT)
+pFont->DrawText(NULL,(char *)MENU[i].opt,-1,&rect2, DT_NOCLIP | DT_RIGHT, color);
+else
+pFont->DrawText(NULL,(char *)MENU[i].opt[val],-1,&rect2, DT_NOCLIP | DT_LEFT, color);
+}
+y+=Mysize;
+}
+}
+//------------------------------------------------------------------------------//
+void MenuNav(void){
+//------------------------------------------------------------------------------//
+if (GetAsyncKeyState(VK_INSERT)&1) Mvisible=(!Mvisible);
+if (!Mvisible) return;
+//------------------------------------------------------------------------------//
+if (GetAsyncKeyState(VK_UP)&1) {
+do {
+Mpos--;
+if (Mpos<0) Mpos=Mmax-1;
+} while (MENU[Mpos].typ==MENUTEXT);
+//------------------------------------------------------------------------------//
+} else if (GetAsyncKeyState(VK_DOWN)&1) {
+do {
+Mpos++;
+if (Mpos==Mmax) Mpos=0;
+} while (MENU[Mpos].typ==MENUTEXT);
+} else if (MENU[Mpos].var) {
+int dir=0;
+//------------------------------------------------------------------------------//
+if (GetAsyncKeyState(VK_LEFT )&1 && *MENU[Mpos].var > 0 ) dir=-1;
+//------------------------------------------------------------------------------//
+if (GetAsyncKeyState(VK_RIGHT)&1 && *MENU[Mpos].var < (MENU[Mpos].maxvalue-1)) dir=1;
+if (dir) {
+*MENU[Mpos].var += dir;
+if (MENU[Mpos].typ==MENUFOLDER) Mmax=0;
+}
+}
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void Anjing()
+{
+bool isFindWindow = true;
+HWND hWnd = NULL;
+
+while(isFindWindow)
+{
+if((hWnd = FindWindowA(pProcessWindowClass, pProcessWindowTitle)) != NULL) // jika window ditemukan
+{
+isFindWindow = false;
+}
+Sleep(500);
+}
+
+GetWindowThreadProcessId(hWnd, &dwProcessID);
+hProcess = OpenProcess(PROCESS_ALL_ACCESS|PROCESS_VM_OPERATION|PROCESS_VM_READ|PROCESS_VM_WRITE|PROCESS_QUERY_INFORMATION, FALSE, dwProcessID);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+#define Detour_Type_0xE9 1
+#define Detour_Type_0xB8 2
+#define Detour_Type_0x68 3
+DWORD CreateDetour(DWORD dwThread,DWORD dwAdress,DWORD dwType,DWORD dwSize)
+{
+DWORD dwDetour,dwProtect,i;
+if (dwAdress&&dwThread&&dwSize>= dwSize)
+{
+dwDetour = (DWORD)VirtualAlloc(0,dwSize+dwSize,0x1000,0x40);
+if (dwDetour&&VirtualProtect((VOID*)dwAdress,dwSize,0x40,&dwProtect))
+{
+for (i=0;i<dwSize;i++)
+{
+*(BYTE*)(dwDetour+i)=*(BYTE*)(dwAdress+i);
+}
+switch (dwType)
+{
+case Detour_Type_0xE9:
+{
+*(BYTE*)(dwDetour+dwSize+0)=0xE9;
+*(DWORD*)(dwDetour+dwSize+1)=(dwAdress-dwDetour-dwSize);
+*(BYTE*)(dwAdress+0)=0xE9;
+*(DWORD*)(dwAdress+1)=(dwThread-dwAdress-dwSize);
+}
+break;
+case Detour_Type_0xB8:
+{
+*(BYTE*)(dwDetour+dwSize+0)=0xB8;
+*(DWORD*)(dwDetour+dwSize+1)=(dwAdress+dwSize);
+*(WORD*)(dwDetour+dwSize+5)=0xE0FF;
+*(BYTE*)(dwAdress+0)=0xB8;
+*(DWORD*)(dwAdress+1)=(dwThread);
+*(WORD*)(dwAdress+5)=0xE0FF;
+}
+break;
+case Detour_Type_0x68:
+{
+*(BYTE*)(dwDetour+dwSize+0)=0x68;
+*(DWORD*)(dwDetour+dwSize+1)=(dwAdress+dwSize);
+*(WORD*)(dwDetour+dwSize+5)=0xC3;
+*(BYTE*)(dwAdress+0)=0x68;
+*(DWORD*)(dwAdress+1)=(dwThread);
+*(WORD*)(dwAdress+5)=0xC3;
+}
+break;
+}
+VirtualProtect((VOID*)dwAdress,dwSize,dwProtect,&dwProtect);
+VirtualProtect((VOID*)dwDetour,dwSize+dwSize,0x20,&dwProtect);
+return dwDetour;
+}
+}
+Sleep(10);
+return (0);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+typedef HRESULT (WINAPI* tEndScene)(LPDIRECT3DDEVICE9 pDevice);
+tEndScene oEndScene = NULL;
+//----------------------------------------------------------------------------------------------------------------------------------
+typedef HRESULT (WINAPI* tDrawIndexedPrimitive)(LPDIRECT3DDEVICE9 pDevice, D3DPRIMITIVETYPE PrimType,INT BaseVertexIndex,UINT MinVertexIndex,UINT NumVertices,UINT startIndex,UINT primCount);
+tDrawIndexedPrimitive oDrawIndexedPrimitive = NULL;
+//----------------------------------------------------------------------------------------------------------------------------------
+typedef HRESULT(WINAPI* tReset)(LPDIRECT3DDEVICE9 pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters);
+tReset oReset = NULL;
+//----------------------------------------------------------------------------------------------------------------------------------
+void PrintText(char pString[], int x, int y, D3DCOLOR col, ID3DXFont *font)
+{
+RECT FontRect = { x, y, x+500, y+30 };
+font->DrawText( NULL, pString, -1, &FontRect, DT_LEFT | DT_WORDBREAK, col);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void FillRGB( int x, int y, int w, int h, D3DCOLOR color, IDirect3DDevice9* pDevice )
+{
+D3DRECT rec = { x, y, x + w, y + h };
+pDevice->Clear( 1, &rec, D3DCLEAR_TARGET, color, 0, 0 );
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void DrawCircle(int X, int Y, int radius, int numSides, DWORD Color)
+{
+
+D3DXVECTOR2 Line[128];
+float Step = PI * 2.0 / numSides;
+int Count = 0;
+for (float a=0; a < PI*2.0; a += Step)
+{
+float X1 = radius * cos(a) + X;
+float Y1 = radius * sin(a) + Y;
+float X2 = radius * cos(a+Step) + X;
+float Y2 = radius * sin(a+Step) + Y;
+Line[Count].x = X1;
+Line[Count].y = Y1;
+Line[Count+1].x = X2;
+Line[Count+1].y = Y2;
+Count += 2;
+}
+g_pLine->Begin();
+g_pLine->Draw(Line,Count,Color);
+g_pLine->End();
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+char Megaze1(void* address, int* val, char bytes)
+{
+DWORD Comander, Rezpect;
+VirtualProtect(address, bytes, PAGE_EXECUTE_WRITECOPY, &Comander);
+memcpy(address, val, bytes);
+VirtualProtect(address,bytes,Comander,&Rezpect);
+return(0);
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+char Mtitle [] = "";
+char *Moptfolder [] = {"Open", "Close"};
+char *Moptonoff [] = {"Off", "On"};
+char *optColor1 [11] = {"Off","Red","Blue","Green","Yellow","Pink","White","Black","Orange","Cyan","Purple"};
+char *optColor2 [11] = {"Off","Red","Blue","Green","Yellow","Pink","White","Black","Orange","Cyan","Purple"};
+char *Secondary [4] ={"Off","Immi Uzzi","Glock 18","R.B 454 SS8M+S"};
+char *Mele [4] ={"Off","Fang Blade","Combat Machete","Mini Axe"};
+//----------------------------------------------------------------------------------------------------------------------------------
+void RebuildMenu(void)
+{
+//MenuAddText(" Alexxxxx~Menu");
+MenuAddText(" RezaBeye77~D3D");
+MenuAddText(" RezaBeye77~D3D ");
+MenuAddText(" RezaBeye77~D3D");
+MenuAddItem("Wallhack Chams" , Moptfolder , &memek , 2 , MENUFOLDER);
+if (memek)
+{
+MenuAddItem("CT & Tero",optColor1, &Hack2,11,MENUITEM); //Hack2_a
+}
+{
+MenuAddItem("Wallhack Weapon" , Moptfolder , &kontolllllllll , 2 , MENUFOLDER);
+if (kontolllllllll)
+{
+MenuAddItem("Weapon",optColor2, &Hack12, 11, MENUITEM);
+}
+MenuAddItem("Wallhack Other" , Moptfolder , &nenennnnnnn , 2 , MENUFOLDER);
+if (nenennnnnnn)
+{
+MenuAddItem("Clean",Moptonoff, &Hack1, 2, MENUITEM);
+MenuAddItem("Asus",Moptonoff, &Hack6, 2, MENUITEM);
+MenuAddItem("FullDot",Moptonoff, &Hack14, 2, MENUITEM); //Wireframe
+MenuAddItem("Wireframe",Moptonoff, &Kontoless, 3, MENUITEM);
+MenuAddItem("No Smoke",Moptonoff, &Hack9, 2, MENUITEM);
+MenuAddItem("No Fog",Moptonoff, &Hack10, 2, MENUITEM);
+MenuAddItem("Crosshair",Moptonoff, &Hack11, 2, MENUWEWITEM);
+// MenuAddText(" Note:" ,*optinfo1);
+}}
+MenuAddItem("Player Hack " , Moptfolder , &fullhack , 2 , MENUFOLDER);
+if (fullhack)
+{
+MenuAddItem("Anti Program Ilegal" , Moptonoff, &azzzzz, 2, MENUITEM);
+MenuAddItem("Auto HS" , Moptonoff, &CH_Hetsotttttttttttttt, 2, MENUITEM);
+MenuAddItem("Damage UP + " , Moptonoff, &CH_Damagetod, 2, MENUITEM);
+MenuAddItem("Invisible Time" , Moptonoff, &CH_INVI, 2, MENUITEM);
+MenuAddItem("Pasang Defuse" ,Moptonoff, &CH_Defusepasang, 2, MENUITEM);
+MenuAddItem("Enemy Kick" , Moptonoff, &CH_Kick, 2, MENUITEM);
+}
+MenuAddItem("Replace Weapon" , Moptfolder , &Replaceeeeeeeeeeeeeeeee , 2 , MENUFOLDER);
+if (Replaceeeeeeeeeeeeeeeee)
+{
+MenuAddItem("Secondary" , Secondary, &CH_Secondary, 4, MENUITEM);
+MenuAddItem("Mele" , Mele, &CH_Mele, 4, MENUITEM);
+}
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+
+PBYTE HookVTableFunction( PDWORD* dwVTable, PBYTE dwHook, INT Index )
+{
+DWORD dwOld = 0;
+VirtualProtect((void*)((*dwVTable) + (Index) ), 0, PAGE_EXECUTE_READWRITE, &dwOld);
+
+PBYTE pOrig = ((PBYTE)(*dwVTable)[Index]);
+(*dwVTable)[Index] = (DWORD)dwHook;
+
+VirtualProtect((void*)((*dwVTable) + (Index)), 0, dwOld, &dwOld);
+
+return pOrig;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+HRESULT RaffiTexture(IDirect3DDevice9 *pD3Ddev, IDirect3DTexture9 **ppD3Dtex, DWORD colour32)
+{
+if( FAILED(pD3Ddev->CreateTexture(8, 8, 1, 0, D3DFMT_A4R4G4B4, D3DPOOL_MANAGED, ppD3Dtex, NULL)) )
+return E_FAIL;
+
+WORD colour16 = ((WORD)((colour32>>28)&0xF)<<12)
+|(WORD)(((colour32>>20)&0xF)<<8)
+|(WORD)(((colour32>>12)&0xF)<<4)
+|(WORD)(((colour32>>4)&0xF)<<0);
+
+
+D3DLOCKED_RECT d3dlr;
+(*ppD3Dtex)->LockRect(0, &d3dlr, 0, 0);
+WORD *pDst16 = (WORD*)d3dlr.pBits;
+
+for(int xy=0; xy < 8*8; xy++)
+*pDst16++ = colour16;
+
+(*ppD3Dtex)->UnlockRect(0);
+
+return S_OK;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+PBYTE ProtectHook( PDWORD* dwVTable, PBYTE dwHook, INT Index )
+{
+DWORD d = 0;
+DWORD ds = 0;
+VirtualProtect((PVOID*)((*dwVTable) + (Index*4)), 4, PAGE_EXECUTE_READWRITE, &d);
+Sleep(-0);
+PBYTE pOrig = ((PBYTE)(*dwVTable)[Index]);
+(*dwVTable)[Index] = (DWORD)dwHook;
+memcpy(pOrig, dwVTable, ds);
+Sleep(-0);
+VirtualProtect((PVOID*)((*dwVTable) + (Index*4)), 4, d, &ds);
+Sleep(-0);
+VirtualProtect((void*)(dwVTable), 4, PAGE_EXECUTE_READWRITE, &d);
+memcpy(pOrig,(void*)(pOrig), 4);
+VirtualProtect((void*)(dwHook), 4, d, &ds);
+return pOrig;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+#pragma warning(disable:4700)
+HMODULE dwD3D9 = GetModuleHandle("d3d9.dll");
+DWORD BaseD3D= NULL;
+//----------------------------------------------------------------------------------------------------------------------------------
+void DrawString(int x, int y, DWORD color, const char *fmt, ...)
+{
+RECT FontPos = { x, y, x + 30, y + 20 };
+char buf[1024] = {'\0'};
+va_list va_alist;
+
+va_start(va_alist, fmt);
+vsprintf(buf, fmt, va_alist);
+va_end(va_alist);
+
+g_pFont2->DrawText(NULL, buf, -1, &FontPos, DT_NOCLIP, color);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void Jam(int x,int y,D3DCOLOR color)
+{
+static float TimeElapsed = 0;
+static char FinalString[MAX_PATH];
+static time_t TimeValue;
+static tm* timeinfo;
+
+RECT FontPos = { x, y, x + 200, y + 16 };
+
+time ( &TimeValue );
+timeinfo = localtime ( &TimeValue );
+if(timeinfo->tm_hour>12)
+sprintf(FinalString, " [Time : %d:%02d:%02d PM] ",timeinfo->tm_hour - 12,timeinfo->tm_min,timeinfo->tm_sec);
+else
+sprintf(FinalString, " [Time : %d:%02d:%02d AM] ",timeinfo->tm_hour, timeinfo->tm_min,timeinfo->tm_sec);
+g_pFont->DrawTextA(NULL, FinalString, -1, &FontPos, DT_NOCLIP, color);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void Tanggal(int x,int y,D3DCOLOR color)
+{
+static char cdate[20] = "" ;
+struct tm * current_tm;
+
+RECT FontPos = { x, y, x + 200, y + 16 };
+
+time_t current_time;
+time (&current_time);
+current_tm = localtime (&current_time);
+sprintf( cdate, " [Date : %d-%d-%02d] ",current_tm->tm_mon+1,current_tm->tm_mday,current_tm->tm_year-100+2000);
+g_pFont->DrawTextA(NULL, cdate, -1, &FontPos, DT_NOCLIP, color);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+void DrawBox(LPDIRECT3DDEVICE9 pDevice, int x, int y, int w, int h, D3DCOLOR Color)
+{
+struct Vertex
+{
+float x,y,z,ht;
+DWORD Color;
+}
+
+V[4] =
+{
+{(float)x,(float)(y+h), 0.0f, 0.0f, Color},
+{(float)x,(float)y, 0.0f, 0.0f, Color},
+{(float)(x+w),(float)(y+h), 0.0f, 0.0f, Color},
+{(float)(x+w),(float)y, 0.0f, 0.0f, Color}
+};
+
+pDevice->SetTexture(0, NULL);
+pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,true);
+pDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
+pDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(Vertex));
+}
+
+void DrawBorder(LPDIRECT3DDEVICE9 device, int x, int y, int w, int h, int s, DWORD Color)
+{
+DrawBox(device, x, y-1, w, s, Color );
+DrawBox(device, x-1, y, s, h, Color );
+DrawBox(device, (x+w), y, s, h, Color );
+DrawBox(device, x, (y+h), w, s, Color );
+}
+void DrawSprite(LPDIRECT3DDEVICE9 pDevice)
+{
+
+pHeader.x=10.0f; pHeader.y=-1.0f; pHeader.z=0.0f;
+
+if(txHeader == NULL)D3DXCreateTextureFromFileInMemoryEx(pDevice,&_Menu,sizeof(_Menu),240,85,D3DX_DEFAULT,0,D3DFMT_UNKNOWN,D3DPOOL_MANAGED,D3DX_DEFAULT,D3DX_DEFAULT,0,NULL,NULL,&txHeader);
+if(bbSprite == NULL)D3DXCreateSprite(pDevice, &bbSprite);
+
+bbSprite->Begin(D3DXSPRITE_ALPHABLEND);
+bbSprite->Draw(txHeader, 0, 0, &pHeader, 0xFFFFFFFF);
+bbSprite->End();
+}
+
+HRESULT WINAPI hkEndScene(LPDIRECT3DDEVICE9 pDevice)
+{
+myfile << "EndScene Telah di Hook\n";
+__asm PUSHAD;
+while(!npDevice) {
+npDevice = pDevice;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+if(bbSprite == NULL)D3DXCreateSprite(pDevice, &bbSprite);
+
+
+if (Generate)
+{
+RaffiTexture(pDevice, &Blooderz , D3DCOLOR_ARGB(255,255,255,0));
+RaffiTexture(pDevice, &TujuhX , D3DCOLOR_ARGB(255,255,192,203));
+RaffiTexture(pDevice, &White, WHITE2);
+RaffiTexture(pDevice, &Red, RED2);
+RaffiTexture(pDevice, &Green, GREEN2);
+RaffiTexture(pDevice, &Blue, BLUE2);
+RaffiTexture(pDevice, &Black, BLACK2);
+RaffiTexture(pDevice, &Purple, PURPLE2);
+RaffiTexture(pDevice, &Grey, GREY2);
+RaffiTexture(pDevice, &Yellow, YELLOW2);
+RaffiTexture(pDevice, &Orange, ORANGE2);
+RaffiTexture(pDevice, &Pink, PINK2);
+RaffiTexture(pDevice, &Cyan, CYAN2);
+Generate = false;
+}
+
+D3DVIEWPORT9 viewP;
+pDevice->GetViewport( &viewP );
+DWORD ScreenCenterX = viewP.Width / 2;
+DWORD ScreenCenterY = viewP.Height / 2;
+
+if ( Hack11 == 1 ){
+
+
+D3DRECT rec6 = {ScreenCenterX-18, ScreenCenterY, ScreenCenterX+ 18, ScreenCenterY+1};
+D3DRECT rec7 = {ScreenCenterX, ScreenCenterY-18, ScreenCenterX+ 1,ScreenCenterY+18};
+pDevice->Clear(1, &rec6, D3DCLEAR_TARGET,BLUE, 0, 0);
+pDevice->Clear(1, &rec7, D3DCLEAR_TARGET,BLUE, 0, 0);
+D3DRECT rec8 = {ScreenCenterX-15, ScreenCenterY, ScreenCenterX+ 15, ScreenCenterY+1};
+D3DRECT rec9 = {ScreenCenterX, ScreenCenterY-15, ScreenCenterX+ 1,ScreenCenterY+15};
+pDevice->Clear(1, &rec8, D3DCLEAR_TARGET,LGRAY, 0, 0);
+pDevice->Clear(1, &rec9, D3DCLEAR_TARGET,LGRAY, 0, 0);
+D3DRECT rec10 = {ScreenCenterX-12, ScreenCenterY, ScreenCenterX+ 12, ScreenCenterY+1};
+D3DRECT rec11 = {ScreenCenterX, ScreenCenterY-12, ScreenCenterX+ 1,ScreenCenterY+12};
+pDevice->Clear(1, &rec10, D3DCLEAR_TARGET,GREEN, 0, 0);
+pDevice->Clear(1, &rec11, D3DCLEAR_TARGET,GREEN, 0, 0);
+D3DRECT rec12 = {ScreenCenterX-9, ScreenCenterY, ScreenCenterX+ 9, ScreenCenterY+1};
+D3DRECT rec13 = {ScreenCenterX, ScreenCenterY-9, ScreenCenterX+ 1,ScreenCenterY+9};
+pDevice->Clear(1, &rec12, D3DCLEAR_TARGET,YELLOW, 0, 0);
+pDevice->Clear(1, &rec13, D3DCLEAR_TARGET,YELLOW, 0, 0);
+D3DRECT rec14 = {ScreenCenterX-6, ScreenCenterY, ScreenCenterX+ 6, ScreenCenterY+1};
+D3DRECT rec15 = {ScreenCenterX, ScreenCenterY-6, ScreenCenterX+ 1,ScreenCenterY+6};
+pDevice->Clear(1, &rec14, D3DCLEAR_TARGET,ORANGE, 0, 0);
+pDevice->Clear(1, &rec15, D3DCLEAR_TARGET,ORANGE, 0, 0);
+D3DRECT rec16 = {ScreenCenterX-3, ScreenCenterY, ScreenCenterX+ 3, ScreenCenterY+1};
+D3DRECT rec17 = {ScreenCenterX, ScreenCenterY-3, ScreenCenterX+ 1,ScreenCenterY+3};
+pDevice->Clear(1, &rec16, D3DCLEAR_TARGET,RED, 0, 0);
+pDevice->Clear(1, &rec17, D3DCLEAR_TARGET,RED, 0, 0);
+
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+if(g_pFont == NULL) D3DXCreateFont(pDevice, 20, 0, FW_BOLD, 1, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Comic Sans MS", &g_pFont); //Create fonts
+if(g_pFont2 == NULL) D3DXCreateFont(pDevice, 20, 0, FW_BOLD, 1, 0, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_DONTCARE, "Comic Sans MS", &g_pFont2); //Create fonts
+if(g_pLine == NULL) D3DXCreateLine(pDevice, &g_pLine);
+
+pDevice->GetViewport(&g_ViewPort);
+pDevice->GetViewport(&g_ViewPort);
+
+DrawString(419, 1, GREEN, "+==|| ** STAR * CHILD ** ||==+");
+Tanggal(-1,1,0xFF00FF00);//x,y
+Jam(200,1,0xFF00FF00);//x,y
+DrawSprite(pDevice);
+if(uyeh == 0)
+{
+
+if (Mmax==0)
+RebuildMenu();
+MenuShow(50,65,g_pFont); //y,x
+MenuNav();
+
+}
+__asm POPAD;
+return oEndScene(pDevice);
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+HRESULT WINAPI hkDrawIndexedPrimitive(LPDIRECT3DDEVICE9 pDevice, D3DPRIMITIVETYPE PrimType,INT BaseVertexIndex,UINT MinVertexIndex,UINT NumVertices,UINT startIndex,UINT primCount)
+{
+myfile << "DIP is hooked\n";
+if(pDevice->GetStreamSource(0, &Stream_Data, &Offset, &Stride) == D3D_OK)
+Stream_Data->Release();
+//----------------------------------------------------------------------------------------------------------------------------------
+if ( Hack1 == 1 ) // WALLHACK
+{
+if((Tero || CT || Dino || Badan || C5 || CT)){
+
+pDevice->SetRenderState( D3DRS_LIGHTING, false);
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+}
+else{
+pDevice->SetRenderState(D3DRS_AMBIENT, false);
+}
+}
+
+if ( Hack2 == 1 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Red);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Red);
+}
+}
+if ( Hack2 == 2 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Blue);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Blue);
+}
+}
+if ( Hack2 ==3 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Green);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Green);
+}
+}
+if ( Hack2 ==4 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Yellow);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Yellow);
+}
+}
+if ( Hack2 == 5 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Pink);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Pink);
+}
+}
+if ( Hack2 == 6 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, White);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, White);
+}
+}
+if ( Hack2 == 7 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Black);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Black);
+}
+}
+if ( Hack2 == 8 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Orange);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Orange);
+}
+}
+if ( Hack2 == 9 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Cyan);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Cyan);
+}
+}
+if ( Hack2 == 10 ) // WALL MINI INDO
+{
+if((Tero || CT || Dino || Badan || C5 || CT))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Purple);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Purple);
+}
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+if (Hack14==1)//FullDot
+{
+if((Stride == 44 || Stride == 52 ))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+pDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_POINT );
+( D3DFILL_FORCE_DWORD );
+}
+else{
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+}
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+if (Hack12==1)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Red);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Red);
+}
+}
+if (Hack12==2)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Blue);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Blue);
+}
+}
+if (Hack12==3)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Green);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Green);
+}
+}
+if (Hack12==4)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Yellow);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Yellow);
+}
+}
+if (Hack12==5)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Pink);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Pink);
+}
+}
+if (Hack12==6)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, White);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, White);
+}
+}
+if (Hack12==7)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Black);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Black);
+}
+}
+if (Hack12==8)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Orange);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Orange);
+}
+}
+if (Hack12==9)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Cyan);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Cyan);
+}
+}
+if (Hack12==10)//WH Weapon
+{
+if((Stride == 32))
+{
+pDevice->SetRenderState(D3DRS_ZENABLE, false);
+pDevice->SetTexture(0, Purple);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE, true);
+pDevice->SetTexture(0, Purple);
+}
+}
+if(Kontoless==1)
+{
+if((Stride == 52 || Stride == 44))
+{
+pDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_WIREFRAME );
+pDevice->SetTexture(0, Green);
+pDevice->SetTexture(0, Green);
+}
+else{
+pDevice->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
+}
+}
+
+if( Hack5 )
+{
+if ((Stride == 24) || (Stride == 23))
+{
+DWORD dwOldZEnable;
+pDevice->GetRenderState(D3DRS_ZENABLE,&dwOldZEnable);
+pDevice->SetRenderState(D3DRS_ZENABLE,D3DZB_FALSE);
+oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+pDevice->SetRenderState(D3DRS_ZENABLE,dwOldZEnable);
+}
+}
+
+if( Hack6 == 1 ) // Wall ASUS
+{
+if (Stride == 40)
+{
+pDevice->SetRenderState( D3DRS_SRCBLEND, 3 );
+pDevice->SetRenderState( D3DRS_DESTBLEND, 4 );
+pDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, true );
+}}
+
+
+if( Hack9 == 1 ) // No Smoke
+{
+if( Stride == 24 && NumVertices == 256 ||(Stride == 24 && NumVertices == 192))
+{
+return D3D_OK;
+}}
+
+if( Hack10 == 1 ) // NO FOG
+{
+pDevice->SetRenderState(D3DRS_FOGENABLE, false);
+}
+return oDrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, startIndex, primCount);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+HRESULT WINAPI hkReset(LPDIRECT3DDEVICE9 pDevice, D3DPRESENT_PARAMETERS* pPresentationParameters)
+{
+myfile << "Reset is hooked\n";
+if( g_pFont )
+g_pFont->OnLostDevice();
+
+if( g_pLine )
+g_pLine->OnLostDevice();
+
+HRESULT iReturnValue = oReset(pDevice, pPresentationParameters);
+
+if(iReturnValue == D3D_OK) {
+
+if( g_pFont )
+g_pFont->OnResetDevice();
+
+if( g_pLine )
+g_pLine->OnResetDevice();
+}
+
+return iReturnValue;
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+LRESULT CALLBACK MsgProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam){return DefWindowProc(hwnd, uMsg, wParam, lParam);}
+void DX_Init(DWORD* table)
+{
+WNDCLASSEX wc = {sizeof(WNDCLASSEX),CS_CLASSDC,MsgProc,0L,0L,GetModuleHandle(NULL),NULL,NULL,NULL,NULL,"DX",NULL};
+RegisterClassEx(&wc);
+HWND hWnd = CreateWindow("DX",NULL,WS_OVERLAPPEDWINDOW,100,100,300,300,GetDesktopWindow(),NULL,wc.hInstance,NULL);
+LPDIRECT3D9 pD3D = Direct3DCreate9( D3D_SDK_VERSION );
+D3DPRESENT_PARAMETERS d3dpp;
+ZeroMemory( &d3dpp, sizeof(d3dpp) );
+d3dpp.Windowed = TRUE;
+d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+d3dpp.BackBufferFormat = D3DFMT_UNKNOWN;
+LPDIRECT3DDEVICE9 pd3dDevice;
+pD3D->CreateDevice(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,hWnd,D3DCREATE_SOFTWARE_VERTEXPROCESSING,&d3dpp,&pd3dDevice);
+DWORD* pVTable = (DWORD*)pd3dDevice;
+pVTable = (DWORD*)pVTable[0];
+table[ES] = pVTable[42];
+table[DIP] = pVTable[82];
+DestroyWindow(hWnd);
+}
+//----------------------------------------------------------------------------------------------------------------------------------
+bool hooked = false;
+DWORD WINAPI LoopFunction(LPVOID lpParam)
+{
+if( hooked == false) {
+DWORD VTable[3] = {0};
+
+while(LoadLibraryA("d3d9.dll")==NULL) {
+Sleep(100);
+}
+DX_Init(VTable);
+HOOK(EndScene,VTable[ES]); //Hook EndScene as a device discovery hook
+while(!npDevice) {
+Sleep(50);
+}
+UNHOOK(EndScene, VTable[ES]);
+void* d3DIP = (void*)(dwD3D9 + (DWORD) + (DWORD) + (DWORD) + (PDWORD)BaseD3D + 1024);//0x4FF50A4B[82]
+void* d3ES = (void*)(dwD3D9 + (DWORD) + (DWORD) + (DWORD) + (PDWORD)BaseD3D + 1036);//0x4FF19FEA[42]
+{
+int i;
+for (i = 0 ; i <= 0 ; i++){
+DWORD d,ds;
+VirtualProtect((void*)(d3ES), 4, PAGE_EXECUTE_READWRITE, &d);
+memcpy(d3ES,(void*)(d3ES), 4);
+VirtualProtect((void*)(d3ES), 4, d, &ds);
+}
+}
+int C;
+for (C = 0 ; C <= 0 ; C++){
+{
+DWORD d,ds;
+VirtualProtect((void*)(d3DIP), 4, PAGE_EXECUTE_READWRITE, &d);
+memcpy(d3DIP,(void*)(d3DIP), 4);
+VirtualProtect((void*)(d3DIP), 4, d, &ds);
+}
+}
+//------------------//
+CreateDetour((DWORD)hkDrawIndexedPrimitive, (DWORD)d3DIP*C,Detour_Type_0xB8,7);
+CreateDetour((DWORD)hkEndScene, (DWORD)d3ES*C,Detour_Type_0xB8,7);
+
+
+*(PDWORD)&oDrawIndexedPrimitive = VTable[DIP];
+*(PDWORD)&oEndScene = VTable[ES];
+//-----------------//
+hooked = true;
+}
+Sleep(10);
+void* d3DIP = (void*)(dwD3D9 + (DWORD) + (DWORD) + (DWORD) + (PDWORD)BaseD3D + 1024);//0x4FF505B0[82]
+void* d3ES = (void*)(dwD3D9 + (DWORD) + (DWORD) + (DWORD) + (PDWORD)BaseD3D + 1036);//0x4FF50260[42]
+{
+DWORD Dark,ds;
+VirtualProtect((void*)(d3ES), 4, PAGE_EXECUTE_READWRITE, &Dark);
+memcpy((void*)d3ES, (const void*)d3ES, 4);
+VirtualProtect((void*)(d3ES), 4, Dark, &ds);
+}
+int i;
+for (i = 0 ; i <= 15 ; i++){
+{
+DWORD d,ds;
+VirtualProtect((void*)(d3DIP), 4, PAGE_EXECUTE_READWRITE, &d);
+memcpy((void*)d3DIP, (const void*)d3DIP, 4);
+VirtualProtect((void*)(d3DIP), 4, d, &ds);
+}
+}
+for (i = 0 ; i <= 15 ; i++){
+if(memcmp((void *)d3DIP, (void *)d3DIP, 82) == 0 ) // Protect Hook Draw Indexed Primitive
+ProtectHook((LPDWORD*)npDevice, (PBYTE)d3DIP, 82);
+}
+
+for (i = 0 ; i <= 15 ; i++){
+if(memcmp((void *)d3ES, (void *)d3ES, 42) == 0 ) // Protect Hook End Scene
+ProtectHook((LPDWORD*)npDevice, (PBYTE)d3ES, 42);
+}
+{
+Sleep(100);
+}
+return 0;
+}
+/*_____________________________________________________________________________*/
+BOOL WINAPI DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpvReserved)
+{
+if(dwReason == DLL_PROCESS_ATTACH) {
+CreateThread(0, 0,LoopFunction, 0, 0, 0);
+CreateThread(0, 0, (LPTHREAD_START_ROUTINE)UndetectHack, 0, 0, 0);
+CreateThread(0, 0, (LPTHREAD_START_ROUTINE)BarusReplace, 0, 0, 0);
+}
+return TRUE;
+}
